@@ -1,0 +1,32 @@
+#Author : Alphonse Ngandjui
+#Creation date: 2022-10-27
+#Description : Docker installation on centos
+#Modification date: 2022-10-27
+
+#!/bin/bash
+
+sudo cat /etc/os-release | grep centos
+if
+[ $? -eq 0 ]
+then
+echo "YOUR ARE ON CENTOS"
+else
+echo "YOU ARE NOT ON CENTOS"
+exit
+fi
+sudo yum update -y
+sudo yum remove docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine -y
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum install docker-ce docker-ce-cli containerd.io -y
+sudo systemctl status docker | grep -i "active (running)"
+if
+[ $? -eq 0 ]
+then
+echo "DOCKER IS ACTIVE AND RUNNING, NOTHING TO DO"
+exit
+else
+echo "DOCKER IS INACTIVE"
+sudo systemctl enable --now docker
+fi
+sudo systemctl status docker
